@@ -2,7 +2,7 @@
 title: My Recipe Collection
 description: A personal collection of treasured recipes and cooking memories
 author: Murali
-email: your-email@example.com
+email: mshanker@kent.edu
 baseurl: "/recipe-book" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site
 
