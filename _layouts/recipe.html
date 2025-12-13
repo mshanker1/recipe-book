@@ -1,0 +1,105 @@
+---
+layout: default
+---
+
+<article class="recipe">
+    <h1>{{ page.title }}</h1>
+    
+    {% if page.author %}
+    <p><em>Recipe by: {{ page.author }}</em></p>
+    {% endif %}
+    
+    {% if page.description %}
+    <p class="recipe-description">{{ page.description }}</p>
+    {% endif %}
+    
+    <div class="recipe-meta">
+        {% if page.prep_time %}
+        <div class="recipe-meta-item">
+            <strong>Prep Time</strong>
+            <span>{{ page.prep_time }} min</span>
+        </div>
+        {% endif %}
+        
+        {% if page.cook_time %}
+        <div class="recipe-meta-item">
+            <strong>Cook Time</strong>
+            <span>{{ page.cook_time }} min</span>
+        </div>
+        {% endif %}
+        
+        {% if page.total_time %}
+        <div class="recipe-meta-item">
+            <strong>Total Time</strong>
+            <span>{{ page.total_time }} min</span>
+        </div>
+        {% endif %}
+        
+        {% if page.servings %}
+        <div class="recipe-meta-item">
+            <strong>Servings</strong>
+            <span>{{ page.servings }}</span>
+        </div>
+        {% endif %}
+        
+        {% if page.difficulty %}
+        <div class="recipe-meta-item">
+            <strong>Difficulty</strong>
+            <span>{{ page.difficulty }}</span>
+        </div>
+        {% endif %}
+    </div>
+    
+    {% if page.tags %}
+    <div class="tags">
+        {% for tag in page.tags %}
+        <a href="{{ site.baseurl }}/tags/#{{ tag | slugify }}" class="tag">{{ tag }}</a>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <div class="ingredients-list">
+        <h2>Ingredients</h2>
+        {{ page.ingredients | markdownify }}
+    </div>
+    
+    <div class="instructions">
+        <h2>Instructions</h2>
+        {{ page.instructions | markdownify }}
+    </div>
+    
+    {% if page.alternatives %}
+    <div class="alternatives-section">
+        <h2>Ingredient Alternatives</h2>
+        {{ page.alternatives | markdownify }}
+    </div>
+    {% endif %}
+    
+    {% if page.notes %}
+    <div class="notes-section">
+        <h2>Notes</h2>
+        {{ page.notes | markdownify }}
+    </div>
+    {% endif %}
+    
+    {% if page.nutrition %}
+    <div class="nutrition">
+        <h2>Nutrition Information</h2>
+        {{ page.nutrition | markdownify }}
+    </div>
+    {% endif %}
+    
+    {% if page.source_url %}
+    <p><strong>Original Source:</strong> <a href="{{ page.source_url }}" target="_blank">{{ page.source_url }}</a></p>
+    {% endif %}
+    
+    {% if page.date_added %}
+    <p><small>Added on: {{ page.date_added | date: "%B %d, %Y" }}</small></p>
+    {% endif %}
+</article>
+
+<hr>
+
+<nav>
+    <p><a href="{{ site.baseurl }}/recipes/">← Back to all recipes</a></p>
+</nav>

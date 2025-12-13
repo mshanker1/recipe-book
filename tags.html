@@ -1,0 +1,43 @@
+---
+layout: default
+title: Recipe Tags
+permalink: /tags/
+---
+
+# Recipe Tags
+
+Click on any tag to see related recipes.
+
+{% assign all_tags = "" | split: "" %}
+{% for recipe in site.recipes %}
+  {% assign all_tags = all_tags | concat: recipe.tags %}
+{% endfor %}
+{% assign all_tags = all_tags | uniq | sort %}
+
+<div class="tags" style="margin: 2rem 0;">
+{% for tag in all_tags %}
+  <a href="#{{ tag | slugify }}" class="tag">{{ tag }} ({{ site.recipes | where_exp: "item", "item.tags contains tag" | size }})</a>
+{% endfor %}
+</div>
+
+<hr>
+
+{% for tag in all_tags %}
+<h2 id="{{ tag | slugify }}">{{ tag | capitalize }}</h2>
+<div class="recipe-grid">
+  {% for recipe in site.recipes %}
+    {% if recipe.tags contains tag %}
+    <div class="recipe-card">
+      <h3><a href="{{ recipe.url | relative_url }}">{{ recipe.title }}</a></h3>
+      {% if recipe.description %}
+      <p>{{ recipe.description | truncate: 100 }}</p>
+      {% endif %}
+      <p><small>
+        {% if recipe.category %}{{ recipe.category | replace: '-', ' ' | capitalize }} • {% endif %}
+        {% if recipe.total_time %}{{ recipe.total_time }} min{% endif %}
+      </small></p>
+    </div>
+    {% endif %}
+  {% endfor %}
+</div>
+{% endfor %}

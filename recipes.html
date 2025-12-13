@@ -1,0 +1,59 @@
+---
+layout: default
+title: All Recipes
+permalink: /recipes/
+---
+
+# All Recipes
+
+<div class="search-container">
+    <input type="text" id="quick-search" placeholder="Quick filter recipes..." onkeyup="filterRecipes()">
+</div>
+
+<div id="recipes-list" class="recipe-grid">
+{% assign sorted_recipes = site.recipes | sort: 'title' %}
+{% for recipe in sorted_recipes %}
+    <div class="recipe-card" data-title="{{ recipe.title | downcase }}" data-tags="{{ recipe.tags | join: ' ' | downcase }}">
+        <h3><a href="{{ recipe.url | relative_url }}">{{ recipe.title }}</a></h3>
+        {% if recipe.author %}<p><em>by {{ recipe.author }}</em></p>{% endif %}
+        {% if recipe.description %}
+        <p>{{ recipe.description | truncate: 150 }}</p>
+        {% endif %}
+        <p><small>
+            {% if recipe.category %}
+            <strong>{{ recipe.category | replace: '-', ' ' | capitalize }}</strong> • 
+            {% endif %}
+            {% if recipe.total_time %}{{ recipe.total_time }} min • {% endif %}
+            {% if recipe.servings %}Serves {{ recipe.servings }} • {% endif %}
+            {% if recipe.difficulty %}{{ recipe.difficulty }}{% endif %}
+        </small></p>
+        {% if recipe.tags %}
+        <div class="tags">
+            {% for tag in recipe.tags %}
+            <a href="{{ site.baseurl }}/tags/#{{ tag | slugify }}" class="tag">{{ tag }}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+{% endfor %}
+</div>
+
+<script>
+function filterRecipes() {
+    const input = document.getElementById('quick-search');
+    const filter = input.value.toLowerCase();
+    const cards = document.querySelectorAll('.recipe-card');
+    
+    cards.forEach(card => {
+        const title = card.dataset.title || '';
+        const tags = card.dataset.tags || '';
+        const text = title + ' ' + tags;
+        
+        if (text.includes(filter)) {
+            card.style.display = '';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+</script>

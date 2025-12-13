@@ -1,0 +1,57 @@
+---
+layout: default
+title: Home
+---
+
+# Welcome to My Recipe Collection
+
+This is my personal collection of recipes gathered from family, friends, and my own kitchen experiments. Each recipe here has a story - whether it's my grandmother's cornbread that never fails, a dish discovered during travels, or something created on a lazy Sunday afternoon.
+
+## Recent Recipes
+
+<div class="recipe-grid">
+{% for recipe in site.recipes limit:6 %}
+    <div class="recipe-card">
+        <h3><a href="{{ recipe.url | relative_url }}">{{ recipe.title }}</a></h3>
+        {% if recipe.description %}
+        <p>{{ recipe.description | truncate: 100 }}</p>
+        {% endif %}
+        <p><small>
+            {% if recipe.category %}{{ recipe.category | capitalize }} • {% endif %}
+            {% if recipe.total_time %}{{ recipe.total_time }} min • {% endif %}
+            {% if recipe.difficulty %}{{ recipe.difficulty }}{% endif %}
+        </small></p>
+        {% if recipe.tags %}
+        <div class="tags">
+            {% for tag in recipe.tags limit:3 %}
+            <a href="{{ site.baseurl }}/tags/#{{ tag | slugify }}" class="tag">{{ tag }}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+{% endfor %}
+</div>
+
+<p><a href="{{ site.baseurl }}/recipes/">View all recipes →</a></p>
+
+## Recent Thoughts
+
+{% for thought in site.thoughts limit:3 %}
+### [{{ thought.title }}]({{ thought.url | relative_url }})
+{{ thought.excerpt | strip_html | truncate: 200 }}
+<small>{{ thought.date | date: "%B %d, %Y" }}</small>
+{% endfor %}
+
+<p><a href="{{ site.baseurl }}/thoughts/">Read more thoughts →</a></p>
+
+## About This Collection
+
+I believe recipes are more than just instructions - they're memories, traditions, and expressions of creativity. This site serves as my digital cookbook where I can:
+
+- Keep track of family recipes before they're lost
+- Document my own modifications and experiments
+- Share discoveries with friends and family
+- Search and organize recipes by ingredients, tags, or categories
+- Write down thoughts and memories associated with cooking
+
+Feel free to explore, and I hope you find something that inspires your next meal!

@@ -1,0 +1,126 @@
+---
+layout: default
+title: Search Recipes
+permalink: /search/
+---
+
+# Search Recipes
+
+<div class="search-container">
+    <input type="text" id="search-input" placeholder="Search by title, ingredients, tags, or author..." autofocus>
+    <small>Start typing to search through all recipes...</small>
+</div>
+
+<div id="search-results"></div>
+
+<script>
+// Build search index
+const recipes = [
+{% for recipe in site.recipes %}
+  {
+    title: "{{ recipe.title | escape }}",
+    url: "{{ recipe.url | relative_url }}",
+    author: "{{ recipe.author | escape }}",
+    category: "{{ recipe.category | escape }}",
+    tags: {{ recipe.tags | jsonify }},
+    description: "{{ recipe.description | strip_html | escape | truncate: 200 }}",
+    content: "{{ recipe.content | strip_html | escape | truncate: 500 }}",
+    servings: "{{ recipe.servings }}",
+    total_time: "{{ recipe.total_time }}",
+    difficulty: "{{ recipe.difficulty }}"
+  }{% unless forloop.last %},{% endunless %}
+{% endfor %}
+];
+
+const searchInput = document.getElementById('search-input');
+const searchResults = document.getElementById('search-results');
+
+function displayResults(results) {
+    if (results.length === 0) {
+        searchResults.innerHTML = '<p>No recipes found. Try different keywords.</p>';
+        return;
+    }
+    
+    let html = '<h2>' + results.length + ' recipe' + (results.length !== 1 ? 's' : '') + ' found</h2>';
+    html += '<div class="recipe-grid">';
+    
+    results.forEach(recipe => {
+        html += `
+            <div class="recipe-card">
+                <h3><a href="${recipe.url}">${recipe.title}</a></h3>
+                ${recipe.author ? `<p><em>by ${recipe.author}</em></p>` : ''}
+                ${recipe.description ? `<p>${recipe.description}</p>` : ''}
+                <p><small>
+                    ${recipe.category ? recipe.category.replace('-', ' ') + ' • ' : ''}
+                    ${recipe.total_time ? recipe.total_time + ' min • ' : ''}
+                    ${recipe.difficulty || ''}
+                </small></p>
+                ${recipe.tags && recipe.tags.length > 0 ? `
+                    <div class="tags">
+                        ${recipe.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    </div>
+                ` : ''}
+            </div>
+        `;
+    });
+    
+    html += '</div>';
+    searchResults.innerHTML = html;
+}
+
+function searchRecipes(query) {
+    if (!query || query.length < 2) {
+        searchResults.innerHTML = '';
+        return;
+    }
+    
+    const searchTerms = query.toLowerCase().split(' ').filter(term => term.length > 0);
+    
+    const results = recipes.filter(recipe => {
+        const searchableText = [
+            recipe.title,
+            recipe.author,
+            recipe.category,
+            recipe.description,
+            recipe.content,
+            ...(recipe.tags || [])
+        ].join(' ').toLowerCase();
+        
+        return searchTerms.every(term => searchableText.includes(term));
+    });
+    
+    // Sort results by relevance (title matches first)
+    results.sort((a, b) => {
+        const aInTitle = a.title.toLowerCase().includes(query.toLowerCase()) ? 1 : 0;
+        const bInTitle = b.title.toLowerCase().includes(query.toLowerCase()) ? 1 : 0;
+        return bInTitle - aInTitle;
+    });
+    
+    displayResults(results);
+}
+
+// Search as you type with debouncing
+let searchTimeout;
+searchInput.addEventListener('input', (e) => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        searchRecipes(e.target.value);
+    }, 300);
+});
+
+// Also search on enter key
+searchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        clearTimeout(searchTimeout);
+        searchRecipes(e.target.value);
+    }
+});
+
+// Check if there's a search query in the URL
+const urlParams = new URLSearchParams(window.location.search);
+const urlQuery = urlParams.get('q');
+if (urlQuery) {
+    searchInput.value = urlQuery;
+    searchRecipes(urlQuery);
+}
+</script>

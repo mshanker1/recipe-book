@@ -1,0 +1,29 @@
+---
+layout: default
+title: Cooking Thoughts & Memories
+permalink: /thoughts/
+---
+
+# Cooking Thoughts & Memories
+
+This is where I write about cooking experiences, kitchen experiments, food memories, and culinary reflections.
+
+{% for thought in site.thoughts %}
+<article style="margin: 3rem 0; padding-bottom: 2rem; border-bottom: 1px solid var(--border);">
+    <h2><a href="{{ thought.url | relative_url }}">{{ thought.title }}</a></h2>
+    <p><small>{{ thought.date | date: "%B %d, %Y" }}</small></p>
+    {{ thought.excerpt }}
+    <p><a href="{{ thought.url | relative_url }}">Read more →</a></p>
+    {% if thought.tags %}
+    <div class="tags">
+        {% for tag in thought.tags %}
+        <span class="tag">{{ tag }}</span>
+        {% endfor %}
+    </div>
+    {% endif %}
+</article>
+{% endfor %}
+
+{% if site.thoughts.size == 0 %}
+<p>No thoughts yet. Time to start writing!</p>
+{% endif %}

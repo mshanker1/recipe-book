@@ -1,0 +1,34 @@
+---
+layout: default
+title: Recipe Categories
+permalink: /categories/
+---
+
+# Recipe Categories
+
+Browse recipes organized by category.
+
+{% assign categories = site.recipes | map: 'category' | uniq | sort %}
+
+{% for category in categories %}
+{% if category %}
+## {{ category | replace: '-', ' ' | capitalize }}
+
+<div class="recipe-grid">
+    {% for recipe in site.recipes %}
+    {% if recipe.category == category %}
+    <div class="recipe-card">
+        <h3><a href="{{ recipe.url | relative_url }}">{{ recipe.title }}</a></h3>
+        {% if recipe.description %}
+        <p>{{ recipe.description | truncate: 100 }}</p>
+        {% endif %}
+        <p><small>
+            {% if recipe.total_time %}{{ recipe.total_time }} min • {% endif %}
+            {% if recipe.servings %}Serves {{ recipe.servings }}{% endif %}
+        </small></p>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
+{% endfor %}

@@ -1,0 +1,60 @@
+# Site settings
+title: My Recipe Collection
+description: A personal collection of treasured recipes and cooking memories
+author: Murali
+email: your-email@example.com
+baseurl: "/recipe-book" # the subpath of your site, e.g. /blog
+url: "" # the base hostname & protocol for your site
+
+# Build settings
+markdown: kramdown
+theme: minima
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# Collections
+collections:
+  recipes:
+    output: true
+    permalink: /recipes/:path/
+  thoughts:
+    output: true
+    permalink: /thoughts/:path/
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "recipes"
+    values:
+      layout: "recipe"
+  - scope:
+      path: ""
+      type: "thoughts"
+    values:
+      layout: "post"
+
+# Categories for recipes
+recipe_categories:
+  - appetizers
+  - soups
+  - salads
+  - main-dishes
+  - desserts
+  - beverages
+  - breakfast
+  - breads
+  - sauces
+
+# Exclude from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - README.md
